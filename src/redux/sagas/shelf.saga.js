@@ -7,7 +7,7 @@ function* shelfSaga(){
         const items = yield axios.get('/api/shelf');
         console.log('get all:', items.data);
         //dispatch to shelf reducer
-        yield put({ type: 'SET_SHELF', payload: items.data })
+        yield put({ type: 'SET_SHELF', payload: items.data})
     } 
     catch {
         console.log('get all error');
