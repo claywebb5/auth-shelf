@@ -15,3 +15,11 @@ CREATE TABLE "item" (
     "image_url" VARCHAR (2083),
     "user_id" INT REFERENCES "user"
 );
+
+-- Dummy data to test a new user
+INSERT INTO "user" ("username", "password")
+VALUES ('cwebby', '1234');
+
+-- Dummy data to test a new item
+INSERT INTO "item" ("description", "image_url", "user_id")
+VALUES ('Busch Latte', 'https://i.ytimg.com/vi/yh85Agjnado/maxresdefault.jpg', 1);
