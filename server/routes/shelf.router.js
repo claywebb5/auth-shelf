@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
+const {rejectUnauthenticated} = require('../modules/authentication-middleware');
 
 /**
  * Get all of the items on the shelf
@@ -35,7 +36,35 @@ router.post('/', (req, res) => {
 /**
  * Delete an item if it's something the logged in user added
  */
-router.delete('/:id', (req, res) => {
+router.delete('/:id', rejectUnauthenticated, (req, res) => {
+  let id = req.params.id; // id of the item to delete
+  console.log('router.delete called with the id of:', id);
+  console.log('req.user.id is:', req.user.id);  
+
+  // Use let instead of const to allow queryText to change
+  let queryText = `SELECT * FROM "item" WHERE id = $1;`; // Grabs the specific item matching the user_id
+  const queryValue = [id];
+  pool.query(queryText, queryValue)
+  .then((result) => {
+    console.log('The result is:', result.rows[0].user_id);
+    // Check to see if the current user is the one who added the image
+    if (result.rows[0].user_id === req.user.id) {
+      // Update queryText
+      queryText = `DELETE FROM "item" WHERE id = $1;`;
+      pool.query(queryText, [id])
+      .then(result => {
+        res.sendStatus(201);
+      })
+      .catch (error => {
+        res.sendStatus(500);
+      });
+    } else {
+      res.sendStatus(401);
+    }
+    })
+    .catch (error => {
+      res.sendStatus(500);
+    });
   // endpoint functionality
 });
 
@@ -51,7 +80,16 @@ router.put('/:id', (req, res) => {
  * they have added to the shelf
  */
 router.get('/count', (req, res) => {
-  // endpoint functionality
+  router.get('/', (req, res) => {
+    pool.query(`SELECT "user"."username", SUM("item"."user_id") FROM "user"
+    JOIN "item"
+    ON "user"."id"="item"."user_id"
+    GROUP BY "user"."username";`).then(result => res.send(result.rows))
+    .catch(err => {
+      console.log('ERROR in GET', err);
+      res.sendStatus(500);
+    });
+  });
 });
 
 /**
