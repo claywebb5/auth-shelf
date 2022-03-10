@@ -19,6 +19,14 @@ function ShelfPage() {
     setNewItem('');
     setNewImage('');
   }
+
+  function handleDelete(item) {
+    console.log('Deleting:', item);
+    dispatch ({
+      type: 'DELETE_ITEM',
+      payload: item
+    })
+  }
   
   return (
     <div className="container">
@@ -35,6 +43,7 @@ function ShelfPage() {
         <div key={i}>
             <h3>Description {item.description}</h3>
             <img src={item.image_url} />
+            <button onClick={() => handleDelete(item)}>Delete</button>
         </div>
         
       ))} 
