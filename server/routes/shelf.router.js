@@ -22,6 +22,8 @@ router.post('/', (req, res) => {
   const userId = req.user.id;
   const queryText = `INSERT INTO "item" (description, image_url, user_id)
   VALUES ($1, $2, $3);`;
+  console.log('in shelf POST, userId:', userId);
+  
   pool.query(queryText, [shelfItem.description, shelfItem.image_url, userId])
   .then(result => {
     console.log('in POST .then');
