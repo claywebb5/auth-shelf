@@ -1,8 +1,8 @@
-import { put } from 'redux-saga/effects';
+import { put, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 
 
-function* shelfSaga(){
+function* fetchShelf(){
     try {
         const items = yield axios.get('/api/shelf');
         console.log('get all:', items.data);
@@ -13,4 +13,9 @@ function* shelfSaga(){
         console.log('get all error');
     }
 }
+
+function* shelfSaga() {
+    yield takeLatest('FETCH_SHELF', fetchShelf);
+}
+
 export default shelfSaga
