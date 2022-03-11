@@ -9,9 +9,6 @@ function ShelfPage() {
 
   const [newItem, setNewItem] = useState('')
   const [newImage, setNewImage] = useState('')
-  
-  // const isEditable = this.state.isEditable;
-
 
   useEffect(() => {
     dispatch({ type: 'FETCH_SHELF' })
@@ -23,45 +20,6 @@ function ShelfPage() {
     setNewItem('');
     setNewImage('');
   }
-
-  function handleDelete(item) {
-    console.log('Deleting:', item);
-    dispatch({
-      type: 'DELETE_ITEM',
-      payload: item
-    })
-  }
-
-  function handleEdit(item) {
-    console.log('Editing:', item);
-    if (item.id == 2) {
-      setIsEditable('')
-      return (
-        <>
-          {
-            isEditable ?
-              <>
-              </>
-              :
-              <>
-                <input onChange={(e) => setNewItem(e.target.value)} value={newItem} type="text" placeholder="Enter Item" />
-                <input onChange={(e) => setNewImage(e.target.value)} value={newImage} type="text" placeholder="Enter Image URL" />
-              </>
-          }
-        </>
-      )
-    }
-    setIsEditable(!isEditable);
-    // dispatch({
-    //   type: 'EDIT_ITEM',
-    //   payload: item
-    // })
-
-
-
-
-  }
-
 
   return (
     <div className="container">

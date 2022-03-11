@@ -75,12 +75,19 @@ router.delete('/:id', rejectUnauthenticated, (req, res) => {
  */
 router.put('/:id', (req, res) => {
   // endpoint functionality
-  let id = req.params.id; // id of the item to delete
-  console.log('router.put called with the id of:', id);
-  console.log('req.user.id is:', req.user.id);
+  console.log('router.put called with the id of:', req.params.id);
+  const id = req.params.id; // id of the item to delete
+  const item = req.body; // item to edit
   // Updates description + image of id selected
   let queryText = `UPDATE item SET description = $1, image_url = $2 WHERE id = $3;`;
-  // to be continued...
+  pool.query(queryText, [item.description, item.image_url, id])
+  .then(result => {
+    console.log('in router.put.then');
+    res.sendStatus(201);
+  }).catch(err => {
+    console.log('in router.put.catch', err);
+    res.sendStatus(500);
+  })
 });
 
 /**

@@ -5,6 +5,7 @@ import userSaga from './user.saga';
 import shelfSaga from './shelf.saga';
 import addItemSaga from './addItem.saga';
 import deleteItemSaga from './deleteItem.saga';
+import updateItemSaga from './updateItem.saga';
 
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
@@ -21,5 +22,6 @@ export default function* rootSaga() {
     shelfSaga(),
     addItemSaga(),
     deleteItemSaga(),
+    updateItemSaga(),
   ]);
 }

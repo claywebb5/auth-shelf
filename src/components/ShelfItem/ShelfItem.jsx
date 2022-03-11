@@ -1,14 +1,17 @@
-import { useState } from 'react';
-
-
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 function ShelfItem({ item }) {
 
-    const [isEditable, setIsEditable] = useState('false')
-    const [newItem, setNewItem] = useState(item.description)
-    const [newImage, setNewImage] = useState(item.image_url)
+    const dispatch = useDispatch();
 
-    console.log('isEditable', isEditable);
+    const [isEditable, setIsEditable] = useState('false')
+    const [editItem, setEditItem] = useState(item.description)
+    const [editImage, setEditImage] = useState(item.image_url)
+
+    // ---------------------------------------------------------------------------------------- //
+    // Local Functions                                                                          //
+    // ---------------------------------------------------------------------------------------- //
 
     function handleDelete(item) {
         console.log('Deleting:', item);
@@ -18,22 +21,26 @@ function ShelfItem({ item }) {
         })
     }
 
-    function handleEdit() {
-        setIsEditable(!isEditable);
-    }
-
-    function handleSaveEdit(item) {
+    function handleSaveEdit() {
         console.log('in handleSaveEdit');
         dispatch({
             type: 'UPDATE_ITEM',
-            payload: item
+            payload: {id: item.id, description: editItem, image_url: editImage}
         })
         setIsEditable(!isEditable);
     }
 
+    function handleEditClick() {
+        setIsEditable(!isEditable);
+    }
+
+    // ---------------------------------------------------------------------------------------- //
+    // Return                                                                                   //
+    // ---------------------------------------------------------------------------------------- //
+
     return (
-        <div>
-            <h3>Description {item.description}</h3>
+        <div className="shelf-item">
+            <div>Description: <b>{item.description}</b></div>
             <img src={item.image_url} />
             <br />
             {
@@ -41,16 +48,16 @@ function ShelfItem({ item }) {
                     <>
                         {/* Displays when IS NOT Editable */}
                         <button onClick={() => handleDelete(item)}>Delete</button>
-                        <button onClick={handleEdit}>Edit</button>
+                        <button onClick={handleEditClick}>Edit</button>
                     </>
                     :
                     <>
                         {/* Display when IS Editable */}
-                        <button onClick={() => handleSaveEdit(item)}>Save</button>
-                        <button onClick={handleEdit}>Cancel</button>
-                        <br/>
-                        <input onChange={(e) => setNewItem(e.target.value)} value={newItem} type="text" placeholder="Enter Item" />
-                        <input onChange={(e) => setNewImage(e.target.value)} value={newImage} type="text" placeholder="Enter Image URL" />
+                        <button onClick={handleSaveEdit}>Save</button>
+                        <button onClick={handleEditClick}>Cancel</button>
+                        <br />
+                        <input onChange={(e) => setEditItem(e.target.value)} value={editItem} type="text" placeholder="Enter Item" />
+                        <input onChange={(e) => setEditImage(e.target.value)} value={editImage} type="text" placeholder="Enter Image URL" />
                     </>
             }
         </div>
